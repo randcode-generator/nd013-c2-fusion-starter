@@ -85,7 +85,7 @@ class Filter:
         # TODO Step 1: update state x and covariance P with associated measurement, save x and P in track
         ############
         H = meas.sensor.get_H(track.x) # measurement matrix
-        gamma = self.gamma(track, meas, H)
+        gamma = self.gamma(track, meas)
         S = self.S(track, meas, H)
         K = track.P*H.transpose()*np.linalg.inv(S) # Kalman gain
         x1 = track.x + K*gamma # state update
@@ -100,12 +100,12 @@ class Filter:
         ############ 
         track.update_attributes(meas)
     
-    def gamma(self, track, meas, H):
+    def gamma(self, track, meas):
         ############
         # TODO Step 1: calculate and return residual gamma
         ############
 
-        gamma = meas.z - H*track.x # residual
+        gamma = meas.z - meas.sensor.get_hx(track.x) # residual
         return gamma
         
         ############

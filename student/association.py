@@ -117,7 +117,7 @@ class Association:
         ############
         
         H = meas.sensor.get_H(track.x)
-        gamma = KF.gamma(track, meas, H)
+        gamma = KF.gamma(track, meas)
         return gamma.T * np.linalg.inv(KF.S(track, meas, H)) * gamma
         
         ############
