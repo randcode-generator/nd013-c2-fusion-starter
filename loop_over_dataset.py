@@ -57,7 +57,9 @@ show_only_frames = [0, 200] # show only frames in interval for debugging
 
 ## Prepare Waymo Open Dataset file for loading
 data_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dataset', data_filename) # adjustable path in case this script is called from another working directory
-results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results')
+model = "fpn-resnet" #options are ['fpn-resnet', 'darknet']
+sequence = "1"
+results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + model + '/results_sequence_' + sequence + '_' + model.lstrip('fpn-'))
 datafile = WaymoDataFileReader(data_fullpath)
 datafile_iter = iter(datafile)  # initialize dataset iterator
 
@@ -164,7 +166,7 @@ while True:
         ## Performance evaluation for object detection
         if 'measure_detection_performance' in exec_list:
             print('measuring detection performance')
-            det_performance = eval.measure_detection_performance(detections, frame.laser_labels, valid_label_flags, configs_det.min_iou)     
+            det_performance = eval.measure_detection_performance(detections, frame.laser_labels, valid_label_flags)     
         else:
             print('loading detection performance measures from file')
             # load different data for final project vs. mid-term project
@@ -276,11 +278,11 @@ while True:
 
 ## Evaluate object detection performance
 if 'show_detection_performance' in exec_list:
-    eval.compute_performance_stats(det_performance_all, configs_det)
+    eval.compute_performance_stats(det_performance_all)
 
 ## Plot RMSE for all tracks
 if 'show_tracks' in exec_list:
-    plot_rmse(manager, all_labels, configs_det)
+    plot_rmse(manager, all_labels)
 
 ## Make movie from tracking results    
 if 'make_tracking_movie' in exec_list:
